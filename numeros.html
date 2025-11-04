@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Chosen Palette: SCOD (Primary: #D9006C, Secondary: #F7931E, Text: #58595B) -->
     <!-- Application Structure Plan: SPA com navegação por âncoras (#home, #diagnostico, #cenarios, #solucoes). A estrutura guia o usuário desde os KPIs de alto nível, passando pelo problema central (distorção da média), explorando o impacto financeiro de soluções (simulador de piso) e terminando com um plano de ação tático (abas de solução). Escolhido por ser um fluxo lógico de descoberta e resolução. -->
-    <!-- Visualization & Content Choices: 1. KPIs (KPIs.csv): Cartões de estatística (HTML/Tailwind) para visão geral rápida. 2. Média Simples vs. Ponderada (KPIs.csv): Gráfico de barras (Chart.js) para destacar a disparidade central. 3. Clientes Problemáticos (Top_20_Baixo_Unit.csv): Tabela (HTML) para identificar os detratores. 4. Cenários de Piso (Cenarios_Piso.csv): Botões interativos (JS) + Cartões de display para simulação de impacto. 5. Plano de Ação (nte.pdf): Abas (JS/HTML) para organizar soluções complexas de forma clara. -->
+    <!-- Visualization & Content Choices: 1. KPIs (KPIs.csv): Cartões de estatística (HTML/Tailwind) para visão geral rápida. 2. Média Simples vs. Ponderada (KPIs.csv): Gráfico de barras (Chart.js) para destacar a disparidade central. 3. Clientes Problemáticos (Top_20_Baixo_Unit.csv): Tabela (HTML) para identificar os detratores. 4. Cenários de Piso (Cenarios_Piso.csv): Botões interativos (JS) + Cartões de display para simulação de impacto. 5. Plano de Ação (nte.pdf): Abas (JS/HTML) para organizar soluções complexas de forma clara. 6. Top 15 Receita (Top_15_Receita.csv): Gráfico de barras horizontal (Chart.js) para mostrar concentração de receita. 7. Histograma de Preços (Cenarios_Piso.csv): Gráfico de barras (Chart.js) para mostrar distribuição de clientes por faixa de preço. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 
     <style>
@@ -136,19 +136,16 @@
                     <div class="kpi-value">R$ 0,60</div>
                     <div class="kpi-label">Média Ponderada (R$/Unid.)</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-value text-gray-700">79</div>
-                    <div class="kpi-label">Clientes Ativos</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value text-gray-700">R$ 0,99</div>
-                    <div class="kpi-label">Mediana (R$/Unid.)</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-value text-gray-700">49%</div>
-                    <div class="kpi-label">Distorção (Simples vs. Pond.)</div>
+            </div>
+
+            <div class="mt-16 bg-white rounded-lg shadow-xl p-8 md:p-12">
+                <h3 class="text-2xl font-bold mb-8 text-center">Top 15 Clientes por Receita</h3>
+                <p class="text-lg text-center mb-8 max-w-3xl mx-auto">Este gráfico mostra os 15 clientes que mais contribuem para a receita total, destacando a concentração e a importância de contas-chave.</p>
+                <div class="chart-container" style="height: 500px; max-height: 500px; max-width: 900px;">
+                    <canvas id="topRevenueChart"></canvas>
                 </div>
             </div>
+
         </section>
 
         <section id="diagnostico" class="py-16 bg-white rounded-lg shadow-xl my-16 p-8 md:p-12">
@@ -157,7 +154,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
                 <div>
                     <h3 class="text-2xl font-bold mb-4">O Desafio da Média: Ponderada vs. Simples</h3>
-                    <p class="text-lg mb-4">Nossa métrica mais importante, a Média Ponderada (receita real por unidade), é <strong class="scod-primary">49% menor</strong> que a Média Simples. </p>
+                    <p class="text-lg mb-4">Nossa métrica mais importante, a Média Ponderada (receita real por unidade), é <strong class="scod-primary">49% menor</strong> que a Média Simples.</p>
                     <p class="text-lg"><strong>Conclusão:</strong> Clientes com maior volume de unidades pagam valores muito abaixo da média, distorcendo a receita e pressionando a rentabilidade para baixo.</p>
                 </div>
                 <div class="chart-container">
@@ -165,11 +162,19 @@
                 </div>
             </div>
 
+            <div class="my-16">
+                <h3 class="text-2xl font-bold mb-6 text-center">Distribuição de Clientes por Valor Unitário</h3>
+                <p class="text-lg text-center mb-8 max-w-3xl mx-auto">Este histograma revela o problema: a maioria dos nossos clientes (40 de 79) está concentrada nas faixas de preço mais baixas, abaixo de R$ 1,00, com 27 clientes críticos abaixo de R$ 0,80.</p>
+                <div class="chart-container" style="height: 350px; max-height: 350px; max-width: 700px;">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+
             <hr class="my-16 border-gray-200">
 
             <div>
                 <h3 class="text-2xl font-bold mb-6 text-center">Quem Puxa a Média Para Baixo? (Amostra do Q20)</h3>
-                <p class="text-lg text-center mb-8 max-w-3xl mx-auto">Estes são os clientes com o menor Valor Unitário Normalizado. Eles concentram alto volume e, em muitos casos, alta frequência de custo (mensal), representando o maior dreno na rentabilidade.</p>
+                <p class="text-lg text-center mb-8 max-w-3xl mx-auto">Estes são os clientes com o menor Valor Unitário Normalizado. Eles concentram alto volume e, em muitos cases, alta frequência de custo (mensal), representando o maior dreno na rentabilidade.</p>
                 <div class="overflow-x-auto shadow-md rounded-lg">
                     <table class="w-full min-w-max text-left bg-white">
                         <thead class="bg-gray-800 text-white uppercase text-sm">
@@ -227,7 +232,7 @@
                 <button class="scenario-btn" data-piso="1.20">Piso R$ 1,20</button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 <div class="kpi-card bg-green-50">
                     <div id="receita-adicional-display" class="kpi-value text-green-600">--</div>
                     <div class="kpi-label">Receita Adicional / Mês</div>
@@ -235,6 +240,10 @@
                 <div class="kpi-card bg-blue-50">
                     <div id="nova-receita-display" class="kpi-value text-blue-600">--</div>
                     <div class="kpi-label">Nova Receita Total / Mês</div>
+                </div>
+                 <div class="kpi-card bg-yellow-50">
+                    <div id="clientes-afetados-display" class="kpi-value text-yellow-700">--</div>
+                    <div class="kpi-label">Clientes Afetados</div>
                 </div>
             </div>
         </section>
@@ -307,6 +316,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             initAverageChart();
+            initTopRevenueChart();
+            initDistributionChart();
             initScenarios();
             initTabs();
             initMobileMenu();
@@ -358,7 +369,121 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return 'R$ 'Z + context.raw.toFixed(2);
+                                    return ' R$ ' + context.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initTopRevenueChart() {
+            const ctx = document.getElementById('topRevenueChart');
+            if (!ctx) return;
+
+            const data = {
+                labels: [
+                    'MRV', 'ITAU UNIBANCO S.A.', 'EMAIS URBANISMO', 'ALPHAVILLE', 'MARIA LUIZA CONST.', 
+                    'Plano&Plano', 'GIACOMELLI IMÓVEIS', 'DIRECIONAL', 'BANCO AGIBANK S.A', 'METROCASA', 
+                    'ECON CONSTRUTORA', 'LUMIS CONSTRUTORA', 'HABITAT CONSTRUTORA', 'EZ HOTEIS', 'ACCENTURE'
+                ],
+                datasets: [{
+                    label: 'Faturamento (R$)',
+                    data: [
+                        10000.00, 9000.00, 7267.08, 7000.00, 5580.78, 
+                        3500.00, 3152.06, 2800.00, 2500.00, 2400.00, 
+                        2223.60, 2200.00, 2187.00, 2125.00, 1980.00
+                    ],
+                    backgroundColor: '#D9006C',
+                    borderColor: '#D9006C',
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + (value / 1000) + 'k';
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' R$ ' + context.raw.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initDistributionChart() {
+            const ctx = document.getElementById('distributionChart');
+            if (!ctx) return;
+            
+            const data = {
+                labels: ["< R$ 0,80", "R$ 0,80 - R$ 1,00", "R$ 1,00 - R$ 1,20", "> R$ 1,20"],
+                datasets: [{
+                    label: 'Nº de Clientes',
+                    data: [27, 13, 6, 33],
+                    backgroundColor: [
+                        '#D9006C',
+                        '#F7931E',
+                        '#FDBB2D',
+                        '#58595B'
+                    ],
+                    borderWidth: 0
+                }]
+            };
+
+            new Chart(ctx.getContext('2d'), {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Nº de Clientes'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.raw + ' clientes';
                                 }
                             }
                         }
@@ -377,6 +502,7 @@
             const btns = document.querySelectorAll('.scenario-btn');
             const adicionalDisplay = document.getElementById('receita-adicional-display');
             const novaReceitaDisplay = document.getElementById('nova-receita-display');
+            const clientesAfetadosDisplay = document.getElementById('clientes-afetados-display');
 
             function formatCurrency(value) {
                 return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -390,6 +516,7 @@
                 
                 adicionalDisplay.innerText = formatCurrency(data.adicional);
                 novaReceitaDisplay.innerText = formatCurrency(novaReceita);
+                clientesAfetadosDisplay.innerText = data.clientes + ' clientes';
 
                 btns.forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.piso === piso);
@@ -443,3 +570,4 @@
     </script>
 </body>
 </html>
+
